@@ -101,7 +101,7 @@ end
 figure(1)
 
 %Plots for temperatures
-subplot(3,2,1)
+subplot(2,2,1)
 plot(tmat,ymat(:,1),'k','linewidth',3)
 hold all
 plot(tmat,yspmat(:,1),'k','linestyle','--','linewidth',3)
@@ -111,7 +111,7 @@ xlabel('time(s)','FontSize',20)
 ylabel('T1','FontSize',20)
 set(gca,'Fontsize',20)
 
-subplot(3,2,2)
+subplot(2,2,2)
 plot(tmat,ymat(:,2),'k','linewidth',3)
 hold all
 plot(tmat,yspmat(:,2),'k','linestyle','--','linewidth',3)
@@ -121,31 +121,18 @@ xlabel('time(s)','FontSize',20)
 ylabel('T2','FontSize',20)
 set(gca,'Fontsize',20)
 
-subplot(3,2,3)
+subplot(2,2,3)
 plot(tmat,umat(:,1),'k','linewidth',3)
 % axis([0 timeTotal 0 umax(1)])
 xlabel('time(s)','FontSize',20)
 ylabel('u1','FontSize',20)
 set(gca,'Fontsize',20)
 
-subplot(3,2,4)
+subplot(2,2,4)
 plot(tmat,umat(:,2),'k','linewidth',3)
 % axis([0 timeTotal 0 umax(2)])
 xlabel('time(s)','FontSize',20)
 ylabel('u2','FontSize',20)
 set(gca,'Fontsize',20)
 
-subplot(3,2,5)
-plot(tmat,ymat(:,1)-yspmat(:,1),'k','linewidth',3)
-% axis([0 timeTotal 0 umax(2)])
-xlabel('time(s)','FontSize',20)
-ylabel('Difference in y1-ysp1','FontSize',20)
-set(gca,'Fontsize',20)
-
-subplot(3,2,6)
-plot(tmat,ymat(:,2)-yspmat(:,2),'k','linewidth',3)
-% axis([0 timeTotal 0 umax(2)])
-xlabel('time(s)','FontSize',20)
-ylabel('Difference in y2-ysp2','FontSize',20)
-set(gca,'Fontsize',20)
-
+sgtitle('Tuning Parameters are QR=diag[7000,7000],  R1=diag[100,10],  OH=10,  NC=10')
