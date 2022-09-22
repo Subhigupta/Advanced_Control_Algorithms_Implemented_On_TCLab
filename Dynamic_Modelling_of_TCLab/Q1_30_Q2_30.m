@@ -4,7 +4,7 @@ clc
 
 format long
 
-n = 60*60;  % Number of second time points (10min)
+n = 60*60;  % Number of second time points 
 
 % Heater steps
 Q1 = ones(n,1)*30;
@@ -42,7 +42,7 @@ subplot(2,2,1)
 plot(time/60.0,Q1,'b--','LineWidth',2)
 ylabel('Heater Output')
 legend('Q_1')
-ylim([-10,110])
+ylim([0,50])
 xlabel('Time (min)')
 
 subplot(2,2,2)
@@ -55,13 +55,16 @@ subplot(2,2,3)
 plot(time/60.0,Q2,'r--','LineWidth',2)
 ylabel('Heater Output')
 legend('Q_2')
-ylim([-10,110])
+ylim([0,50])
 xlabel('Time (min)')
 
 subplot(2,2,4)
 plot(time/60.0,T2-273.15,'r-','LineWidth',2)
-ylabel('Temperature (degC)')
+ylabel('Temperature (degC)');
 legend('T2 predicted')
+ylim([20 40]);
+
+sgtitle('Temperature simulation for Q1=30 and Q2=30 for t=60s')
 
 fprintf('Error between last steady states value in T1 %.16f\n', T1(end)-T1(end-1));
 fprintf('Error between last steady states value in T2 %0.16f\n', T2(end)-T2(end-1));

@@ -3,7 +3,7 @@ clear;
 
 %% loaded all the necessary files
 
-Matrices_defined_for_MPC;
+Matrices_defined_for_comparing_MPC_and_mpMPC;
 load('Q1_30_Q2_30.mat')
 T1_measured_initial=T1(end,1);
 T2_measured_initial=T2(end,1);
@@ -23,16 +23,16 @@ u = u0;
 
 %Initial values of states
 %Taking a row vector
-xSSp = ss1.Report.Parameters.X0'*0.98; %pseudo states from state space model
+xSSp = ss1.Report.Parameters.X0'*0.92; %pseudo states from state space model
 %Initial temperature values
 y0 = [ss1.C*xSSp']';
 %Giving the steady state temperatures as set point 
-ysp = [T1_measured_initial T2_measured_initial]; %SP change after 2 s
+ysp = [T1_measured_initial T2_measured_initial];%*1.05; %SP change after 2 s
 
 %% Defined all variable matrices that will change after each sample time
 
 %Running simulation for 150 seconds
-timeTotal = 75;% total time(sec)
+timeTotal = 200;% total time(sec)
 
 %Defining initial matrices and conditions 
 t0 = 0;
@@ -65,7 +65,9 @@ for i=0:t_int:timeTotal-t_int
 %     end
     %Defined parameter using the definition in problem.namesThita
     theta = [xSSp ymat(end,:) ysp umat(end,:)];
-    [uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
+    
+    [nCR,uaux] = PointLocation(Solution,theta');
+   [uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
 
     uaux = real(uaux); %to discard 0.00001i due to numerical errors
     if(isempty(uaux))
@@ -98,7 +100,7 @@ else
 end
 %% plots
 
-figure(1)
+figure(2)
 
 %Plots for temperatures
 subplot(2,2,1)
@@ -109,6 +111,7 @@ hold off
 % axis([0 timeTotal 305 330])
 xlabel('time(s)','FontSize',20)
 ylabel('T1','FontSize',20)
+%ylim([300,330])
 set(gca,'Fontsize',20)
 
 subplot(2,2,2)
@@ -119,6 +122,7 @@ hold off
 % axis([0 timeTotal 305 330])
 xlabel('time(s)','FontSize',20)
 ylabel('T2','FontSize',20)
+%ylim([300,330])
 set(gca,'Fontsize',20)
 
 subplot(2,2,3)
@@ -135,4 +139,5 @@ xlabel('time(s)','FontSize',20)
 ylabel('u2','FontSize',20)
 set(gca,'Fontsize',20)
 
-sgtitle('Tuning Parameters are QR=diag[100000,100000],  R1=diag[1,1],  OH=5,  NC=5')
+sgtitle('Multiparametric MPC: Tuning Parameters are QR=diag[9300,9300],  R1=diag[0.5,0.5],  OH=2,  NC=2')
+% sgtitle('MPC: Tuning Parameters are QR=diag[5000,5000],  R1=diag[0.5,0.5],  OH=2,  NC=2')

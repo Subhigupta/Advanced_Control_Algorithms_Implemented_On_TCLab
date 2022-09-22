@@ -46,23 +46,25 @@ subplot(2,2,1)
 plot(time/60.0,Q1,'b--','LineWidth',2)
 ylabel('Heater Output')
 legend('Q_1')
-ylim([-10,110])
+ylim([0,50])
 xlabel('Time (min)')
 
 subplot(2,2,2)
 plot(time/60.0,T1-273.15,'b-','LineWidth',2)
+ylim([41.2,41.4])
 legend('T1 predicted')
 
 subplot(2,2,3)
 plot(time/60.0,Q2,'r--','LineWidth',2)
 ylabel('Heater Output')
 legend('Q_2')
-ylim([-10,110])
+ylim([0,50])
 xlabel('Time (min)')
 
 subplot(2,2,4)
 plot(time/60.0,T2-273.15,'r-','LineWidth',2)
 ylabel('Temperature (degC)')
+ylim([37.5,38.5])
 legend('T2 predicted')
 
 fprintf('Error between last steady states value in T1 %.16f\n', T1(end)-T1(end-1));

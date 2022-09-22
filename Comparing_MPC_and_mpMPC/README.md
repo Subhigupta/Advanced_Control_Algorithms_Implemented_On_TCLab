@@ -1,0 +1,11 @@
+**Basic understanding of design and tuning parameters of MPC**
+- QR, R1, OH, NC are the tuning parameters in this project.
+- Weighting matrix QR alolws (T- Tsp) to be weighted individually.
+- Weigthing matrix R1 allows change in control input (u(k)-u(k-1)) to be weighted individually.
+- OH is prediction horizon.
+- NC is control horizon.
+- The plots in figures folder illustrates how the tuning of parameters affect the trajectory of output variables.
+- If elements of weighting matrix QR are changed then the settling time of the trajectory of output variables changes.
+- If elements of weighting matrix R1 are changed then the smoothness of the input/manipulated variables curve changes.
+- Changing OH helps you predict future from current kth state to (k+OH)th state. Predicting into far future helps you generate better controlled moves.
+- NC in this project is taken equal to OH.Defining NC means generating control moves from cuurent kth state to (k+NC-1)th state.

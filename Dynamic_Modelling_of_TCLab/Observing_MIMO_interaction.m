@@ -55,18 +55,20 @@ subplot(2,2,1)
 plot(time/60.0,Q1,'b--','LineWidth',2)
 ylabel('Heater Output')
 legend('Q_1')
-ylim([-10,110])
+ylim([0,60])
 xlabel('Time (min)')
 
 subplot(2,2,2)
 plot(time/60.0,T1-273.15,'b-','LineWidth',2)
+ylim([40 52]);
 legend('T1 predicted')
 
 subplot(2,2,3)
 plot(time/60.0,Q2,'r--','LineWidth',2)
 ylabel('Heater Output')
 legend('Q_2')
-ylim([-10,110])
+ylim([20,55])
+xlim([0 120]);
 xlabel('Time (min)')
 
 subplot(2,2,4)
