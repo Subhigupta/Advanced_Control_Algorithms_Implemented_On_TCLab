@@ -6,8 +6,6 @@ format long
 load('Q1_30_Q2_30.mat')
 T1_measured_initial=T1(end,1);
 T2_measured_initial=T2(end,1);
-T1_measured_initial
-T2_measured_initial
 
 format long
 
@@ -19,12 +17,11 @@ Q2 = ones(n,1);
 
 %Giving step test to heater 1 while keeping heater 2 at 30%
 Q1(1)=30;
-Q1(2:n)=1.5*30;
+Q1(2:n)=2*30;%giving step input at t=0 min
 Q2(1:60*60)=30;
-Q2(60*60:n)=1.5*30;
+Q2(60*60:n)=2*30;%giving step input at t=60 min
 
 Q_matrix=[Q1 Q2];
-
 
 % Store temperature results
 T1=zeros(n,1);
@@ -48,6 +45,9 @@ end
 
 T_predicted_matrix=[T1 T2];
 
+Q_matrix = Q_matrix - [30 30]; % removed steady state heater level
+T_predicted_matrix = T_predicted_matrix - [T1_measured_initial T2_measured_initial]; % removed steady state temperature
+
 % Plot results
 figure(1)
 
@@ -60,7 +60,7 @@ xlabel('Time (min)')
 
 subplot(2,2,2)
 plot(time/60.0,T1-273.15,'b-','LineWidth',2)
-ylim([40 52]);
+% ylim([40 52]);
 legend('T1 predicted')
 
 subplot(2,2,3)
