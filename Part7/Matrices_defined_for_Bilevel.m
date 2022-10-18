@@ -10,12 +10,14 @@ load('ss1.mat');  % used as a constraint in MPC formulation
 
 % % from ss2qp word document  
 % % The usual linear discrete time state space model (LTI) equations:
-% % 
+
+% % The below two equations define your model crystal formulation 
 % % x(t+1) 	= Ax(t) + Bu(t) + Cd(t)
 % % y(t) 	= Dx(t) + Eu(t) + e
 
 model_crystal.A = ss1.A;
-model_crystal.B = ss1.B;
+model_crystal.B = ss1.B(:,1);
+model_crystal.C=ss1.B(:,2);
 model_crystal.D = ss1.C; % the matrix D in ss2qp is equivalent to matrix C in ss1
 
 %% Matrix QR defined
@@ -68,6 +70,18 @@ problem.Q = problem.Q/2;
 %options.mpSolver='Graph';
 %options.TimeMax =24*3600;
 Solution=mpQP(problem);
-%PlotSolution(Solution)
+% tfixed = NaN*ones(size(Solution(1).CR.A,2),1);
+% tfixed(1)=10000;
+% tfixed(2)=10000;
+% tfixed(3)=10000;
+% tfixed(4)=10000;
+% 
+% tfixed(6)=40;
+% 
+% tfixed(8)=50;
+% tfixed(9)=50;
+
+%option = {'CR','OBJ','all'};
+%PlotSolution(Solution,tfixed)%,tfixed)
 save Solution Solution
 load('Solution.mat');
