@@ -1,7 +1,7 @@
 clear all
 clc
 
-%syms x1 x2 y1 y2 y3
+% syms x1 x2 y1 y2 y3
 % obj_outer=-8*x1-4*x2+4*y1-40*y2+4*y3;
 % obj_inner=x1+2*x2+y1+y2+2*y3;
 
