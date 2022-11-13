@@ -21,8 +21,8 @@ model_crystal.D = ss1.C;
 %% 
 
 %The MPC tuning Weights of MPC
-weighted_coefficient1_R1= 0.5;%1; %100%0.001;
-weighted_coefficient2_R1= 0.5;%0.1; %10 %0.01;
+weighted_coefficient1_R1= 0;%0.5;%1; %100%0.001;
+weighted_coefficient2_R1= 0;%0.5;%0.1; %10 %0.01;
 %mpc_crystal.R1 = 0.001*eye(size(model_crystal.B,2)); %Weight matrix for output moves (∆u)
 mpc_crystal.R1 =blkdiag(weighted_coefficient1_R1,weighted_coefficient2_R1); %Weight matrix for output moves (∆u)
 
@@ -33,8 +33,8 @@ mpc_crystal.R=blkdiag(weighted_coefficient_1,weighted_coefficient_2); %Weight ma
 
 %% 
 
-weighted_coefficient1_QR=9300;%10;%1000;
-weighted_coefficient2_QR=9300;%10;%1000
+weighted_coefficient1_QR=5000;%10;%1000;
+weighted_coefficient2_QR=5000;%10;%1000
 mpc_crystal.QR=blkdiag(weighted_coefficient1_QR,weighted_coefficient2_QR);
 %mpc_crystal.QR = Weighted_Coefficients*eye(size(model_crystal.D,1));%Quadratic matrix for tracked output
 

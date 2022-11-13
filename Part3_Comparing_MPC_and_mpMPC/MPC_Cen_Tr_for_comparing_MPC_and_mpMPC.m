@@ -58,8 +58,7 @@ t_int = 1; % sec
 % % 
 
 for i=0:t_int:timeTotal-t_int
-    tspan=[i i+t_int];
-%     if i == 20
+    tspan=[i i+t_int];%     if i == 20
 %         %Giving step change to temperature values
 %         ysp = 1.5*ysp;   
 %     end
@@ -67,7 +66,7 @@ for i=0:t_int:timeTotal-t_int
     theta = [xSSp ymat(end,:) ysp umat(end,:)];
     
     [nCR,uaux] = PointLocation(Solution,theta');
-   [uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
+   %[uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
 
     uaux = real(uaux); %to discard 0.00001i due to numerical errors
     if(isempty(uaux))

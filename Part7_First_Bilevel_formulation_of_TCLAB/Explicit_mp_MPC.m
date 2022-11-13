@@ -1,13 +1,13 @@
-
 clc;
 clear;
 
 %% loaded all the necessary files
 
-Matrices_defined_for_Bilevel;
+Matrices_defined_for_Twolevel;
 load('Q1_30_Q2_30.mat') %steady state data
 T1_measured_initial=T1(end,1); %steady state value
 T2_measured_initial=T2(end,1); %steady state value
+ynominal=[314.4435277118964	311.146230339323];
 
 tic
 
@@ -47,16 +47,20 @@ t_int = 1; % sec
 % %        y(t) = C x(t) + D u(t) + e(t)
 
 % % problem.namesThita
-
+tt = [];
 for i=0:t_int:timeTotal-t_int
     tspan=[i i+t_int];
 
     %Defined parameter using the definition in problem.namesThita
-    theta = [xSSp y0-ynominal ysp-ynominal umat(end,:)]; % 
+    theta1 = [xSSp y0-ynominal ysp-ynominal]; % 
     
-   %[nCR,uaux] = PointLocation(Solution,theta');
-   [uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
-
+   [nCR1,uaux1] = PointLocation(Final,theta1');
+   %[uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
+    uaux1 = 0;
+    theta2=[xSSp uaux1 y0-ynominal ysp-ynominal];
+    [ncR2,uaux2]= PointLocation(Solution,theta2');
+    uaux=[uaux1;uaux2];
+    
     uaux = real(uaux); %to discard 0.00001i due to numerical errors
     if(isempty(uaux))
         disp('uaux empty break')
@@ -66,19 +70,20 @@ for i=0:t_int:timeTotal-t_int
     u = uaux(1:2); % inputs at the current time step
     umat = [umat;u'];
     
-    xSSp = (ss1.A*xSSpmat(end,:)' + ss1.B*umat(end,:)')'; %no disturbance
-    ySSp = ss1.C*xSSpmat(end,:)';
+    xSSp = ss1.A*xSSpmat(end,:)' + ss1.B(:,2)*uaux2 + ss1.B(:,1)*uaux1;%*(umat(end,:))'); %no disturbance
+    ySSp = (ss1.C*xSSpmat(end,:)');
     
     %calculating output for optimal control inputs obtained
-    [t,y] = ode45(@(t,x)heat2Model(t,x,u+unominal),tspan,y0);
+    [t,y] = ode45(@(t,x)heat2Model(t,x,u'+unominal),tspan,y0);
     y0 = y(end,:);
     
-    xSSpmat = [xSSpmat;xSSp];
+    xSSpmat = [xSSpmat;xSSp'];
     ymat = [ymat; y0];
     yspmat = [yspmat;ysp];
     
     tmat = [tmat; i+t_int];
-    
+    tt = [tt;nCR1 ncR2];
+    xSSp=xSSp';
 end
 
 umat = umat + unominal;
