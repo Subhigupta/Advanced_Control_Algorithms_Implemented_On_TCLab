@@ -26,6 +26,8 @@ u = u0;
 xSSp = ss1.Report.Parameters.X0'*0.98; %pseudo states from state space model
 %Initial temperature values
 y0 = [ss1.C*xSSp']';
+y0(1)=310;
+y0(2)=308;
 %Giving the steady state temperatures as set point 
 ysp = [T1_measured_initial T2_measured_initial]; %SP change after 2 s
 
@@ -109,6 +111,7 @@ hold off
 % axis([0 timeTotal 305 330])
 xlabel('time(s)','FontSize',20)
 ylabel('T1','FontSize',20)
+ylim([305,320])
 set(gca,'Fontsize',20)
 
 subplot(2,2,2)
@@ -135,4 +138,4 @@ xlabel('time(s)','FontSize',20)
 ylabel('u2','FontSize',20)
 set(gca,'Fontsize',20)
 
-sgtitle('Tuning Parameters are QR=diag[100000,100000],  R1=diag[1,1],  OH=5,  NC=5')
+sgtitle('Tuning Parameters are QR=diag[5000000,1000000],  R1=diag[90000,10000],  OH=10,  NC=10')

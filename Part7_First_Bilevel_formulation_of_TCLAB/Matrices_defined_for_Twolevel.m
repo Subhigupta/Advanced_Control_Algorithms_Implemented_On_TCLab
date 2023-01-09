@@ -18,13 +18,13 @@ load('ss1.mat');  % used as a constraint in MPC formulation
 
 model_crystal.A = ss1.A;
 model_crystal.B = ss1.B(:,2); % in inner level u2 is kept as decision variable
-model_crystal.C=ss1.B(:,1); %in inner level u1 is kept constant
+model_crystal.C=ss1.B(:,1); %in inner level u1 is disturbance
 model_crystal.D = ss1.C; % the matrix D in ss2qp is equivalent to matrix C in ss1
 
-%% Matrix QR defined
+%% Matrix QR defined : Weights for temperature set point tracking
 
-weighted_coefficient1_QR = 1000;%10;%10;%1000;
-weighted_coefficient2_QR = 1000;%10;%10;%1000
+weighted_coefficient1_QR = 5000;%10;%10;%1000;
+weighted_coefficient2_QR = 5000;%10;%10;%1000
 mpc_crystal.QR=blkdiag(weighted_coefficient1_QR,weighted_coefficient2_QR);
 %mpc_crystal.QR = Weighted_Coefficients*eye(size(model_crystal.D,1));%Quadratic matrix for tracked output
 
@@ -43,13 +43,15 @@ mpc_crystal.Xmin = -1000000*ones(size(model_crystal.A,1),1);%-10000000
 mpc_crystal.Xmax = 1000000*ones(size(model_crystal.A,1),1);%10000000
 
 %The bounds of the inputs
-mpc_crystal.Umin = 0 - unominal';   %lower bounds for u=Q1,Q2
+mpc_crystal.Umin = 0 - unominal';
+%mpc_crystal.Umin = 28 - unominal';%lower bounds for u=Q1,Q2
 mpc_crystal.Umax = 100- unominal';    %upper bounds for u =Q1,Q2
 
-mpc_crystal.Dmin = 0 - unominal';   %lower bounds for u=Q1,Q2
-mpc_crystal.Dmax = 100- unominal';    %upper bounds for u =Q1,Q2
+mpc_crystal.Dmin = 0- unominal';   %lower bounds for disturbance
+mpc_crystal.Dmax = 100- unominal';    %upper bounds for disturbance
 
 %So range of manipulated variable is -30 < u < 70
+
 mpc_crystal.Ymin=[0 0]'+273.15 - ynominal';
 mpc_crystal.Ymax=[100 100]'+273.15- ynominal';
 % So range of controlled variable is -41.29<y1<58.70
@@ -83,13 +85,15 @@ save Solution Solution
 load('Solution.mat');
 
 %% Solving outer level Second iteration
+Solution_Inner_Level=[];
+Solution_Outer_level=[];
 
-for i=1:11
+for i=1:size(Solution,2)
     %Find dependent solution of inner problem in term of independent parameters
-    matrix_for_dependent_variable=Solution(i).Solution.X;
+    Solution_Inner_Level=[Solution_Inner_Level;Solution(i).Solution.X];
     n=size(Solution(i).Solution.X,2);
     m=size(Solution(i).Solution.X,1);
-    dependent_variable=(matrix_for_dependent_variable(1:m,1:n-1));
+    dependent_variable=(Solution_Inner_Level(i,1:n-1));
     
     %Find new objective function for outer problem
     u2=dependent_variable(:,5);
@@ -108,6 +112,9 @@ for i=1:11
     %Solving outer problem multiparametrically
     sol=mpQP(outer_problem);
     FinalSolution(i).ans=sol;
+    for j=1:size(FinalSolution(i).ans,2)
+        Solution_Outer_level=[Solution_Outer_level;FinalSolution(i).ans(j).Solution.X];  
+    end
 end
 %% FinalSolution separated into critical regions and solution vector 
 

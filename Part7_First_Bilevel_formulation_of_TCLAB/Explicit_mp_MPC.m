@@ -14,7 +14,7 @@ tic
 %% Defined all initial conditions needed
 
 %Initially we kept heaters on for 30% and allowed the system to reach steady state
-u0 = 0*ones(1,2);%input  
+u0 = [0 0];%input  
 u = u0;
 
 %Initial values of states
@@ -22,6 +22,11 @@ u = u0;
 xSSp = ss1.Report.Parameters.X0';%pseudo states from state space model
 %Initial temperature values
 y0 = [ss1.C*xSSp']' + ynominal;
+% y0(1)=370; %IC FOR SECOND SUB-CASESTUDY
+% y0(2)=311.15;
+
+y0(1)=360; %IC FOR THIRD SUB-CASESTUDY
+y0(2)=311.2;
 %Giving the steady state temperatures as set point 
 ysp = [T1_measured_initial T2_measured_initial];
 
@@ -56,7 +61,7 @@ for i=0:t_int:timeTotal-t_int
     
    [nCR1,uaux1] = PointLocation(Final,theta1');
    %[uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
-    uaux1 = 0;
+%     uaux1 = 0;
     theta2=[xSSp uaux1 y0-ynominal ysp-ynominal];
     [ncR2,uaux2]= PointLocation(Solution,theta2');
     uaux=[uaux1;uaux2];

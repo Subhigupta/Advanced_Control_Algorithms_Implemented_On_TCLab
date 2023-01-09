@@ -64,7 +64,7 @@ ylabel('Temperature (degC)');
 legend('T2 predicted')
 ylim([20 40]);
 
-sgtitle('Temperature simulation for Q1=30 and Q2=30 for t=60s')
+%sgtitle('Temperature simulation for Q1=30 and Q2=30 for t=60s')
 
 fprintf('Error between last steady states value in T1 %.16f\n', T1(end)-T1(end-1));
 fprintf('Error between last steady states value in T2 %0.16f\n', T2(end)-T2(end-1));

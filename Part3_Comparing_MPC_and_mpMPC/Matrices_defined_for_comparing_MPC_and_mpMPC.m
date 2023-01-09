@@ -21,28 +21,28 @@ model_crystal.D = ss1.C;
 %% 
 
 %The MPC tuning Weights of MPC
-weighted_coefficient1_R1= 0.5;%1; %100%0.001;
-weighted_coefficient2_R1= 0.5;%0.1; %10 %0.01;
+weighted_coefficient1_R1= 100000;%1; %100%0.001;
+weighted_coefficient2_R1= 100000;%0.1; %10 %0.01;
 %mpc_crystal.R1 = 0.001*eye(size(model_crystal.B,2)); %Weight matrix for output moves (∆u)
 mpc_crystal.R1 =blkdiag(weighted_coefficient1_R1,weighted_coefficient2_R1); %Weight matrix for output moves (∆u)
 
 %% 
-weighted_coefficient_1=0;%0.001/1000;
-weighted_coefficient_2=0;%0.001/1000;
+weighted_coefficient_1=12000;%0.001/1000;
+weighted_coefficient_2=15000;%0.001/1000;
 mpc_crystal.R=blkdiag(weighted_coefficient_1,weighted_coefficient_2); %Weight matrix for control inputs 
 
 %% 
 
-weighted_coefficient1_QR=9300;%10;%1000;
-weighted_coefficient2_QR=9300;%10;%1000
+weighted_coefficient1_QR=95000000;%10;%1000;
+weighted_coefficient2_QR=1000000000;%10;%1000
 mpc_crystal.QR=blkdiag(weighted_coefficient1_QR,weighted_coefficient2_QR);
 %mpc_crystal.QR = Weighted_Coefficients*eye(size(model_crystal.D,1));%Quadratic matrix for tracked output
 
 %% 
 
 %Input and Output Horizons
-mpc_crystal.OH = 2; %10 %how many looks into the future for error minimzation
-mpc_crystal.NC =1;%10  % how many future control actions
+mpc_crystal.OH =2; %10 %how many looks into the future for error minimzation
+mpc_crystal.NC =2;%10  % how many future control actions
 %% 
 
 %The bounds of the temperature states
@@ -69,6 +69,8 @@ problem.Q = problem.Q/2;
 
 options.mpSolver='Graph';
 options.TimeMax =24*3600;
+tic
 Solution=mpQP(problem,options);
+mp_sol_time=toc;
 save Solution Solution
 load('Solution.mat');

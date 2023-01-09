@@ -20,19 +20,22 @@ model_crystal.B = ss1.B;
 model_crystal.D = ss1.C;
 
 %The MPC tuning Weights of MPC
-weighted_coefficient1_R1= 1; %0.001;
-weighted_coefficient2_R1= 1; %0.01;
-%mpc_crystal.R1 = 0.001*eye(size(model_crystal.B,2)); %Weight matrix for output moves (∆u)
+weighted_coefficient1_R1= 90000; %0.001;
+weighted_coefficient2_R1= 10000; %0.01;
+
 mpc_crystal.R1 =blkdiag(weighted_coefficient1_R1,weighted_coefficient2_R1); %Weight matrix for output moves (∆u)
-mpc_crystal.R=0.001*eye(size(model_crystal.B,2)); %Weight matrix for control inputs 
-weighted_coefficient1_QR=1000000;
+
+mpc_crystal.R=10*eye(size(model_crystal.B,2)); %Weight matrix for control inputs 
+
+%Quadratic matrix for tracked output
+weighted_coefficient1_QR=5000000;
 weighted_coefficient2_QR=1000000;
 mpc_crystal.QR=blkdiag(weighted_coefficient1_QR,weighted_coefficient2_QR);
-%mpc_crystal.QR = Weighted_Coefficients*eye(size(model_crystal.D,1));%Quadratic matrix for tracked output
+
 
 %Input and Output Horizons
-mpc_crystal.OH = 5; %10 %how many looks into the future for error minimzation
-mpc_crystal.NC = 5;%10  % how many future control actions
+mpc_crystal.OH = 10; %10 %how many looks into the future for error minimzation
+mpc_crystal.NC = 10;%10  % how many future control actions
 
 %The bounds of the temperature states
 mpc_crystal.Xmin = -1000000000*ones(size(model_crystal.A,1),1); 

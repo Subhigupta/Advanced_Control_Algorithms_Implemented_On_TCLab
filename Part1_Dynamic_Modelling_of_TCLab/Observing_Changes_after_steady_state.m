@@ -52,6 +52,7 @@ xlabel('Time (min)')
 subplot(2,2,2)
 plot(time/60.0,T1-273.15,'b-','LineWidth',2)
 ylim([41.2,41.4])
+ylabel('Temperature')
 legend('T1 predicted')
 
 subplot(2,2,3)
