@@ -5,8 +5,6 @@ clear;
 
 Matrices_defined_for_Bilevel;
 load('Q1_30_Q2_30.mat')
-load('unominal.mat');
-load('ynominal.mat');
 T1_measured_initial=T1(end,1);
 T2_measured_initial=T2(end,1);
 

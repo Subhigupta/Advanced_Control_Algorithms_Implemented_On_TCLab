@@ -5,8 +5,8 @@ clc
 %state space model step size 1
 
 load('ss1.mat');  
-load('unominal.mat');
-load('ynominal.mat')
+% load('unominal.mat');
+% load('ynominal.mat')
 % %   Discrete-time identified state-space model:
 % %     x(t+Ts) = A x(t) + B u(t) + K e(t)
 % %        y(t) = C x(t) + D u(t) + e(t)
