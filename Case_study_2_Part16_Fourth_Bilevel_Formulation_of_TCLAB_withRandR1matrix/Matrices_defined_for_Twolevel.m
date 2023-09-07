@@ -92,9 +92,9 @@ Solution_Outer_level=[];
 for i=1:size(Solution,2)
     %Find dependent solution of inner problem in term of independent parameters
     Solution_Inner_Level=[Solution_Inner_Level;Solution(i).Solution.X];
-    n=size(Solution(i).Solution.X,2);
-    m=size(Solution(i).Solution.X,1);
-    dependent_variable=(Solution_Inner_Level(i,1:n-1));
+    n=size(Solution(i).Solution.X,2);%no of columns (11)
+    m=size(Solution(i).Solution.X,1);% no of rows (1)
+    dependent_variable=(Solution_Inner_Level(i,1:n-1));%removing the constant term
     
     %Find new objective function for outer problem
     u2=dependent_variable(:,5);

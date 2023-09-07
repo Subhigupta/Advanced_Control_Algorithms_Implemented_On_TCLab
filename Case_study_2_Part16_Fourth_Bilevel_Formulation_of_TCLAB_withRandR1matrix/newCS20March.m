@@ -17,18 +17,18 @@ load('ss1.mat');  % used as a constraint in MPC formulation
 % % y(t) 	= Dx(t) + Eu(t) + e
 
 model_crystal.A = ss1.A;
-model_crystal.B = ss1.B(:,1); % in inner level u1 is kept as decision variable
-model_crystal.C=ss1.B(:,2); %in inner level u2 is disturbance
+model_crystal.B = ss1.B(:,2); % in inner level u2 is kept as decision variable
+model_crystal.C=ss1.B(:,1); %in inner level u1 is disturbance
 model_crystal.D = ss1.C; % the matrix D in ss2qp is equivalent to matrix C in ss1
 
 %% Matrix QR defined : Weights for temperature set point tracking
 
-weighted_coefficient1_QR = 1500000;%10;%10;%1000;
-weighted_coefficient2_QR = 0;%10;%10;%1000
+weighted_coefficient1_QR = 0;%10;%10;%1000;
+weighted_coefficient2_QR = 5000000;%10;%10;%1000
 mpc_crystal.QR=blkdiag(weighted_coefficient1_QR,weighted_coefficient2_QR);
-%Quadratic matrix for tracked output
+%mpc_crystal.QR = Weighted_Coefficients*eye(size(model_crystal.D,1));%Quadratic matrix for tracked output
 mpc_crystal.R=50;
-mpc_crystal.R1=50000;
+mpc_crystal.R1=90000;
 %% Input and Output Horizons
 % the Q matrix dimensions (NC*2) (equivalent to decision variables) depend on value of control horizon taken
 % Since my manipulated variables are two then at each time step in the range of
@@ -44,13 +44,12 @@ mpc_crystal.Xmin = -1000000*ones(size(model_crystal.A,1),1);%-10000000
 mpc_crystal.Xmax = 1000000*ones(size(model_crystal.A,1),1);%10000000
 
 %The bounds of the inputs
-%mpc_crystal.Umin = 0 - unominal';
-mpc_crystal.Umin = 0 - unominal';%lower bounds for u=Q1,Q2
-mpc_crystal.Umax = 100- unominal';    %upper bounds for u =Q1,Q2
+mpc_crystal.Umin = 0 - unominal(2);
+%mpc_crystal.Umin = 28 - unominal';%lower bounds for u=Q1,Q2
+mpc_crystal.Umax = 100- unominal(2);    %upper bounds for u =Q1,Q2
 
-% mpc_crystal.Dmin = 0- unominal';   %lower bounds for disturbance
-mpc_crystal.Dmin = 0- unominal';
-mpc_crystal.Dmax = 100- unominal';    %upper bounds for disturbance
+mpc_crystal.Dmin = 0- unominal(1);   %lower bounds for disturbance
+mpc_crystal.Dmax = 100- unominal(1);    %upper bounds for disturbance
 
 %So range of manipulated variable is -30 < u < 70
 
@@ -93,18 +92,17 @@ Solution_Outer_level=[];
 for i=1:size(Solution,2)
     %Find dependent solution of inner problem in term of independent parameters
     Solution_Inner_Level=[Solution_Inner_Level;Solution(i).Solution.X];
-    n=size(Solution(i).Solution.X,2);
-    m=size(Solution(i).Solution.X,1);
-    dependent_variable=(Solution_Inner_Level(i,1:n-1));
-    
-    %Find new objective function for outer problem
-    u1=dependent_variable(:,5);
-    u2=1;
-    obj_new_outer=u1+u2;
+    n=size(Solution(i).Solution.X,2);%no of columns (11)
+    m=size(Solution(i).Solution.X,1);% no of rows (1)
+    dependent_variable=(Solution_Inner_Level(i,1:n-1));%removing the constant term
     
     %Formulation of objective function of outer problem
-    outer_problem.c=obj_new_outer;
-    outer_problem.ct=[dependent_variable(1:4), dependent_variable(6:end)]';
+    outer_problem.Q=dependent_variable(:,5)^2 + 1^2;
+    outer_problem.Ht=2*dependent_variable(:,5).*[dependent_variable(1:4), dependent_variable(6:end)];
+    duplicate_Qt=problem.Qt;
+    duplicate_Qt(:,5)=[];
+    duplicate_Qt(5,:)=[];
+    outer_.problemQt=duplicate_Qt;
 
     %Constraints of outer problem
     outer_problem.A=Solution(i).CR.A(:,5);

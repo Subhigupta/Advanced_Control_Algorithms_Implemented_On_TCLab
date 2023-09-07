@@ -11,6 +11,7 @@ format long
 
 n = 60*120;  % Number of second time points (10min)
 
+
 % Heater steps
 Q1 = ones(n,1);
 Q2 = ones(n,1);

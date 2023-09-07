@@ -67,8 +67,8 @@ for i=0:t_int:timeTotal-t_int
     %Defined parameter using the definition in problem.namesThita
     theta = [xSSp ymat(end,:) ysp umat(end,:)];
     
-    %[nCR,uaux] = PointLocation(Solution,theta');
-    [uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
+    [nCR,uaux,fval1] = PointLocation(Solution,theta');
+    %[uaux,fval,exitflag] = cplexqp(2*problem.Q, problem.Ht*theta'+problem.c, problem.A, problem.b+problem.F*theta');
 
     uaux = real(uaux); %to discard 0.00001i due to numerical errors
     if(isempty(uaux))
