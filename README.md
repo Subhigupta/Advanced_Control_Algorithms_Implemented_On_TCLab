@@ -1,5 +1,6 @@
 # Model_Predictive_control_On_TCLab
-The codes in this file demonstrate implementation of State-Space MPC, Explicit MPC and Bilevel MPC on an arduino device TCLab. 
+The codes in this file demonstrate implementation of State-Space MPC, Explicit MPC and Bilevel MPC on an arduino device TCLab. Bilevel MPC is the simplest case of Hierarchical optimization. Bilevel MPC can be useful when natural hierarchy exists in multivariable and constraint control layer.
+
 The task performed by each of the code is described as follows:
 1. Dynamic Modelling of TCLab
    - TCLab, a two-input two-output system, has been modeled as a dual heater system. The control inputs or manipulated variables are the heater outputs and the two controlled outputs are the temperature of the two heaters. The differential equations have been used to represent the system.
@@ -11,5 +12,6 @@ The task performed by each of the code is described as follows:
     - In the second case study, the upper level objective aimed at minimizing a linear economic cost function while the lower level focused on tracking temperature of heater 2. 
 5. Case Study 3
     - In the third case study, the upper level objective focused tracking of temperature of heater 1 while the lower level focused on tracking temperature of heater 2.
+
 In all the above case studies, offline solutions are generated for lower and upper level, offline solutions generation is a demonstration of Explicit MPC algorithm implementation.
-The online procedure is used to calculate the parameter vector at each time instant and search of critical regions to get optimal control input.
+The online procedure is used to calculate the parameter vector and search critical region to get optimal control input,  at each time instant.
