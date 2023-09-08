@@ -1,4 +1,4 @@
-# Model_Predictive_control_On_TCLab
+# Model_Predictive_Control_On_TCLab
 The codes in this file demonstrate implementation of State-Space MPC, Explicit MPC and Bilevel MPC on an arduino device TCLab. Bilevel MPC is the simplest case of Hierarchical optimization. Bilevel MPC can be useful when natural hierarchy exists in multivariable and constraint control layer.
 
 The task performed by each of the code is described as follows:
